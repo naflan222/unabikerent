@@ -640,6 +640,26 @@
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     background: var(--bs-dark);
 }
+
+
+
+
+
+
+
+.team-carousel .item {
+    padding: 15px;
+}
+
+.team-carousel .team-item {
+    height: 100%;
+}
+
+.team-carousel .team-img img {
+    height: 280px;
+    object-fit: cover;
+}
+
 /*** copyright end ***/
 
 
