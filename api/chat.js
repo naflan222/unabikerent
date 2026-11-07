@@ -45,10 +45,14 @@ export function createChatHandler(generate = generateText) {
             return res.status(200).json({ reply: text.trim() });
         } catch (error) {
             // Never return provider errors or authentication details to visitors.
+            var reason = ['customer_verification_required', 'insufficient_funds',
+                'quota_for_entity_exceeded', 'verification', 'payment', 'credit',
+                'model_not_found', 'OIDC'].filter(code => error.message?.includes(code));
             console.error('Una chat request failed', {
                 name: error.name,
                 status: error.statusCode,
-                cause: error.cause?.name
+                cause: error.cause?.name,
+                reason: reason
             });
             return res.status(503).json({ error: 'Una’s AI assistant is unavailable right now. Please try again or contact our team on WhatsApp.' });
         }
