@@ -43,8 +43,13 @@ export function createChatHandler(generate = generateText) {
             });
             if (!text?.trim()) throw new Error('Empty answer');
             return res.status(200).json({ reply: text.trim() });
-        } catch {
+        } catch (error) {
             // Never return provider errors or authentication details to visitors.
+            console.error('Una chat request failed', {
+                name: error.name,
+                status: error.statusCode,
+                cause: error.cause?.name
+            });
             return res.status(503).json({ error: 'Una’s AI assistant is unavailable right now. Please try again or contact our team on WhatsApp.' });
         }
     };

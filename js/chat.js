@@ -72,7 +72,7 @@
         if (event.key === 'Escape') { event.preventDefault(); toggle(false); }
     });
 
-    async function ask(question) {
+    async function ask(question, retrying) {
         question = question.trim();
         if (!question || busy) return;
         busy = true;
@@ -82,7 +82,7 @@
         reset.disabled = true;
         suggestions.hidden = true;
         status.textContent = 'Una is thinking…';
-        addMessage(question, 'user');
+        if (!retrying) addMessage(question, 'user');
         handoff.href = whatsapp + '?text=' + encodeURIComponent('Hi Una Bike Rental, I need help with: ' + question);
         var messages = history.slice(-8).concat({ role: 'user', content: question });
         while (messages.reduce(function (size, message) { return size + message.content.length; }, 0) > 6000) messages.splice(0, 2);
@@ -105,7 +105,7 @@
             retry.type = 'button';
             retry.className = 'una-chat-retry';
             retry.textContent = 'Try again';
-            retry.addEventListener('click', function () { retry.remove(); ask(lastQuestion); });
+            retry.addEventListener('click', function () { retry.remove(); ask(lastQuestion, true); });
             status.appendChild(document.createTextNode(' '));
             status.appendChild(retry);
         } finally {
