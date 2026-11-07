@@ -27,16 +27,19 @@
 
 
     // Car Categories
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     $(".categories-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
+        autoplay: !reducedMotion,
+        autoplayTimeout: 6000,
+        autoplayHoverPause: true,
+        smartSpeed: reducedMotion ? 0 : 600,
         dots: false,
         loop: true,
         margin: 25,
         nav : true,
         navText : [
-            '<i class="fas fa-chevron-left"></i>',
-            '<i class="fas fa-chevron-right"></i>'
+            '<i class="fas fa-chevron-left" aria-hidden="true"></i><span class="visually-hidden">Previous vehicle</span>',
+            '<i class="fas fa-chevron-right" aria-hidden="true"></i><span class="visually-hidden">Next vehicle</span>'
         ],
         responsiveClass: true,
         responsive: {
@@ -55,6 +58,15 @@
             1200:{
                 items:3
             }
+        }
+    });
+
+    // Keep a vehicle still while a visitor uses its details or booking link.
+    $('.categories-carousel').on('focusin', function () {
+        $(this).trigger('stop.owl.autoplay');
+    }).on('focusout', function (event) {
+        if (!reducedMotion && !this.contains(event.relatedTarget)) {
+            $(this).trigger('play.owl.autoplay', [6000]);
         }
     });
 

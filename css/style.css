@@ -1,4 +1,83 @@
 
+/* Dark palette shared by every page; keep the original layout and red brand. */
+:root {
+    color-scheme: dark;
+    --bs-light: #1b2029;
+    --bs-dark: #10141c;
+    --bs-body: #b9c1ce;
+    --una-heading: #f3f5f8;
+    --una-border: #343c49;
+}
+
+body {
+    background: var(--bs-dark);
+    color: var(--bs-body);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--una-heading);
+}
+
+/* Bootstrap 5's compiled utilities contain literal light-theme colors. */
+.bg-white, .bg-light {
+    background-color: var(--bs-light) !important;
+}
+
+.bg-dark {
+    background-color: var(--bs-dark) !important;
+}
+
+.text-body, .text-muted {
+    color: var(--bs-body) !important;
+}
+
+.text-dark, .text-secondary {
+    color: var(--una-heading) !important;
+}
+
+.border-white {
+    border-color: var(--una-border) !important;
+}
+
+.form-control, .form-select, .dropdown-menu {
+    background-color: var(--bs-light);
+    border-color: var(--una-border);
+    color: var(--una-heading);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--bs-light);
+    color: var(--una-heading);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 .2rem rgba(234, 0, 30, .2);
+}
+
+.form-control::placeholder {
+    color: var(--bs-body);
+    opacity: 1;
+}
+
+.dropdown-item, .navbar-light .navbar-nav .nav-link,
+.sticky-top .navbar-light .navbar-nav .nav-link {
+    color: var(--una-heading);
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+    color: var(--una-heading);
+    background: var(--una-border);
+}
+
+.btn-light {
+    background-color: var(--bs-light);
+    border-color: var(--una-border);
+}
+
+a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--una-heading);
+    outline-offset: 3px;
+}
+
 /*** Spinner Start ***/
 /*** Spinner ***/
 #spinner {
@@ -111,7 +190,7 @@
 
 /*** Navbar Start ***/
 .nav-bar {
-    background: var(--bs-white);
+    background: var(--bs-light);
 }
 
 .sticky-top {
@@ -123,7 +202,7 @@
     margin-right: 25px;
     padding: 35px 0;
     letter-spacing: 1px;
-    color: var(--bs-dark);
+    color: var(--una-heading);
     font-size: 17px;
     font-weight: 500;
     outline: none;
@@ -132,7 +211,7 @@
 
 .sticky-top .navbar-light .navbar-nav .nav-link {
     padding: 20px 0;
-    color: var(--bs-dark);
+    color: var(--una-heading);
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -360,7 +439,8 @@
 /*** Cars Categories Start ***/
 .categories .categories-item {
     position: relative;
-    border: 1px solid var(--bs-secondary);
+    border: 1px solid var(--una-border);
+    background: var(--bs-light);
     border-radius: 10px;
     transition: 0.5s;
 }
@@ -377,15 +457,54 @@
 }
 
 .categories .categories-item .categories-item-inner:hover {
-    box-shadow: 0 0 50px rgba(234, 0, 30, .3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .2);
 }
 
 .categories .categories-item-inner .categories-img {
-    background: var(--bs-light);
+    /* Original vehicle photos have white backgrounds. Keep their colors intact. */
+    background: #fff;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.categories .categories-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    padding: 12px;
+}
+
+.categories-carousel .owl-stage {
+    display: flex;
+}
+
+.categories-carousel .owl-item,
+.categories .categories-item,
+.categories .categories-item-inner {
+    display: flex;
+    flex-direction: column;
+}
+
+.categories .categories-item,
+.categories .categories-item-inner,
+.categories .categories-content {
+    flex: 1;
+}
+
+.categories .categories-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.categories .categories-content > .btn {
+    margin-top: auto;
 }
 
 .categories .categories-item-inner .categories-content {
-    border-top: 4px solid var(--bs-white);
+    border-top: 4px solid var(--una-border);
     text-align: center;
     background: var(--bs-light);
 }
@@ -424,6 +543,19 @@
 .categories-carousel .owl-nav .owl-next:hover {
     background: var(--bs-secondary);
     color: var(--bs-white);
+}
+
+.categories-carousel .owl-nav button {
+    border: 1px solid transparent;
+    min-height: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .categories .categories-item,
+    .categories .categories-item-inner,
+    .categories-carousel .owl-nav button {
+        transition: none;
+    }
 }
 /*** Cars Categories End ***/
 
