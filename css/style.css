@@ -792,6 +792,64 @@ a:focus-visible, button:focus-visible {
     object-fit: cover;
 }
 
+/* Rental information uses the same spacing, surfaces, and typography as the site. */
+.rental-benefit {
+    border: 1px solid var(--una-border);
+}
+
+.rental-benefit > i {
+    font-size: 1.75rem;
+}
+
+.rental-faq-list {
+    max-width: 900px;
+}
+
+.rental-faq details {
+    border: 1px solid var(--una-border);
+}
+
+.rental-faq summary {
+    color: var(--una-heading);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.rental-faq summary:focus-visible {
+    outline: 2px solid var(--una-heading);
+    outline-offset: 5px;
+}
+
+#rental-faq {
+    scroll-margin-top: 110px;
+}
+
+.reservation-form input[type="date"],
+.reservation-form input[type="time"] {
+    min-width: 0;
+}
+
+@media (max-width: 575px) {
+    .header-carousel .carousel-caption .bg-secondary.p-5 {
+        padding: 1.5rem !important;
+    }
+
+    .reservation-datetime {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: .5rem;
+    }
+
+    .reservation-datetime > div {
+        grid-column: 1 / -1;
+    }
+
+    .reservation-datetime > .form-control {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+}
+
 /*** copyright end ***/
 
 

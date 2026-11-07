@@ -47,7 +47,7 @@
                 <div class="row gx-0 align-items-center" style="height: 45px;">
                     <div class="col-lg-6 text-center text-lg-start mb-lg-0">
                         <div class="d-flex flex-wrap">
-                            <a href="#" class="text-muted me-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>Find A Location</a>
+                            <a href="https://www.google.com/maps/search/?api=1&amp;query=6.021637%2C80.794721" class="text-muted me-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>Find A Location</a>
                             <a href="tel:+94 77 313 2168" class="text-muted me-4"><i class="fas fa-phone-alt text-primary me-2"></i>+94 77 313 2168</a>
                             <a href="mailto:unabikerental@gmail.com" class="text-muted me-0"><i class="fas fa-envelope text-primary me-2"></i>unabikerental@gmail.com</a>
                         </div>
@@ -105,15 +105,15 @@
                                     <div class="col-lg-6 fadeInLeft animated" data-animation="fadeInLeft" data-delay="1s" style="animation-delay: 1s;">
                                         <div class="bg-secondary rounded p-5">
                                             <h4 class="text-white mb-4">CONTINUE BIKE RESERVATION</h4>
-                                            <form>
+                                            <form class="reservation-form" aria-label="Bike reservation request">
                                                 <div class="row g-3">
                                                     <div class="col-12">
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Select Your Bike type</option>
-                                                            <option value="1">Yamaha ZR</option>
-                                                            <option value="2">Ntorq</option>
-                                                            <option value="3">Ntorq Sport</option>
-                                                            <option value="4">Dio</option>
+                                                        <select class="form-select" name="vehicle" aria-label="Vehicle model" required>
+                                                            <option value="" selected disabled>Select Your Bike type</option>
+                                                            <option value="Yamaha ZR">Yamaha ZR</option>
+                                                            <option value="Ntorq">Ntorq</option>
+                                                            <option value="Ntorq Sport">Ntorq Sport</option>
+                                                            <option value="Dio">Dio</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-12">
@@ -121,56 +121,38 @@
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-map-marker-alt"></span> <span class="ms-1">Pick Up</span>
                                                             </div>
-                                                            <input class="form-control" type="text" placeholder="Enter a City" aria-label="Enter a City">
+                                                            <input class="form-control" type="text" name="pickup" placeholder="City or hotel" aria-label="Pickup city or hotel" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <a href="#" class="text-start text-white d-block mb-2">Need a different drop-off location?</a>
+                                                        <span class="text-start text-white d-block mb-2">Different return location? Add it below (optional).</span>
                                                         <div class="input-group">
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-map-marker-alt"></span><span class="ms-1">Drop off</span>
                                                             </div>
-                                                            <input class="form-control" type="text" placeholder="Enter a City" aria-label="Enter a City">
+                                                            <input class="form-control" type="text" name="dropoff" placeholder="Same as pickup (optional)" aria-label="Return city or hotel (optional)">
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <div class="input-group">
+                                                        <div class="input-group reservation-datetime">
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-calendar-alt"></span><span class="ms-1">Pick Up</span>
                                                             </div>
-                                                            <input class="form-control" type="date">
-                                                            <select class="form-select ms-3" aria-label="Default select example">
-                                                                <option selected>12:00</option>
-                                                                <option value="1">1:00</option>
-                                                                <option value="2">2:00</option>
-                                                                <option value="3">3:00</option>
-                                                                <option value="4">4:00</option>
-                                                                <option value="5">5:00</option>
-                                                                <option value="6">6:00</option>
-                                                                <option value="7">7:00</option>
-                                                            </select>
+                                                            <input class="form-control" type="date" name="pickupDate" aria-label="Pickup date" required>
+                                                            <input class="form-control ms-3" type="time" name="pickupTime" aria-label="Pickup time" value="12:00" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <div class="input-group">
+                                                        <div class="input-group reservation-datetime">
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-calendar-alt"></span><span class="ms-1">Drop off</span>
                                                             </div>
-                                                            <input class="form-control" type="date">
-                                                            <select class="form-select ms-3" aria-label="Default select example">
-                                                                <option selected>12:00</option>
-                                                                <option value="1">1:00</option>
-                                                                <option value="2">2:00</option>
-                                                                <option value="3">3:00</option>
-                                                                <option value="4">4:00</option>
-                                                                <option value="5">5:00</option>
-                                                                <option value="6">6:00</option>
-                                                                <option value="7">7:00</option>
-                                                            </select>
+                                                            <input class="form-control" type="date" name="returnDate" aria-label="Return date" required>
+                                                            <input class="form-control ms-3" type="time" name="returnTime" aria-label="Return time" value="12:00" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <a href="https://wa.me/94773132168" class="btn btn-primary rounded-pill py-2 px-4">BOOK NOW</a>
+                                                        <button type="submit" class="btn btn-primary rounded-pill py-2 px-4">Check availability</button><p class="small text-white mt-2 mb-0">Send your request on WhatsApp. We will confirm availability and your quote before booking.</p>
                                                     </div>
                                                 </div>
                                             </form>
@@ -194,15 +176,15 @@
                                     <div class="col-lg-6 fadeInLeft animated" data-animation="fadeInLeft" data-delay="1s" style="animation-delay: 1s;">
                                         <div class="bg-secondary rounded p-5">
                                             <h4 class="text-white mb-4">CONTINUE CAR RESERVATION</h4>
-                                            <form>
+                                            <form class="reservation-form" aria-label="Car reservation request">
                                                 <div class="row g-3">
                                                     <div class="col-12">
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Select Your Car type</option>
-                                                            <option value="1">Roomy</option>
-                                                            <option value="2">Every</option>
-                                                            <option value="3">Toyota Camry</option>
-                                                            <option value="4">Wagon R</option>
+                                                        <select class="form-select" name="vehicle" aria-label="Vehicle model" required>
+                                                            <option value="" selected disabled>Select Your Car type</option>
+                                                            <option value="Roomy">Roomy</option>
+                                                            <option value="Every">Every</option>
+                                                            <option value="Toyota Camry">Toyota Camry</option>
+                                                            <option value="Wagon R">Wagon R</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-12">
@@ -210,56 +192,38 @@
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-map-marker-alt"></span><span class="ms-1">Pick Up</span>
                                                             </div>
-                                                            <input class="form-control" type="text" placeholder="Enter a City" aria-label="Enter a City">
+                                                            <input class="form-control" type="text" name="pickup" placeholder="City or hotel" aria-label="Pickup city or hotel" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <a href="#" class="text-start text-white d-block mb-2">Need a different drop-off location?</a>
+                                                        <span class="text-start text-white d-block mb-2">Different return location? Add it below (optional).</span>
                                                         <div class="input-group">
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-map-marker-alt"></span><span class="ms-1">Drop off</span>
                                                             </div>
-                                                            <input class="form-control" type="text" placeholder="Enter a City or Airport" aria-label="Enter a City">
+                                                            <input class="form-control" type="text" name="dropoff" placeholder="Same as pickup (optional)" aria-label="Return city or hotel (optional)">
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <div class="input-group">
+                                                        <div class="input-group reservation-datetime">
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-calendar-alt"></span><span class="ms-1">Pick Up</span>
                                                             </div>
-                                                            <input class="form-control" type="date">
-                                                            <select class="form-select ms-3" aria-label="Default select example">
-                                                                <option selected>12:00</option>
-                                                                <option value="1">1:00</option>
-                                                                <option value="2">2:00</option>
-                                                                <option value="3">3:00</option>
-                                                                <option value="4">4:00</option>
-                                                                <option value="5">5:00</option>
-                                                                <option value="6">6:00</option>
-                                                                <option value="7">7:00</option>
-                                                            </select>
+                                                            <input class="form-control" type="date" name="pickupDate" aria-label="Pickup date" required>
+                                                            <input class="form-control ms-3" type="time" name="pickupTime" aria-label="Pickup time" value="12:00" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <div class="input-group">
+                                                        <div class="input-group reservation-datetime">
                                                             <div class="d-flex align-items-center bg-light text-body rounded-start p-2">
                                                                 <span class="fas fa-calendar-alt"></span><span class="ms-1">Drop off</span>
                                                             </div>
-                                                            <input class="form-control" type="date">
-                                                            <select class="form-select ms-3" aria-label="Default select example">
-                                                                <option selected>12:00</option>
-                                                                <option value="1">1:00</option>
-                                                                <option value="2">2:00</option>
-                                                                <option value="3">3:00</option>
-                                                                <option value="4">4:00</option>
-                                                                <option value="5">5:00</option>
-                                                                <option value="6">6:00</option>
-                                                                <option value="7">7:00</option>
-                                                            </select>
+                                                            <input class="form-control" type="date" name="returnDate" aria-label="Return date" required>
+                                                            <input class="form-control ms-3" type="time" name="returnTime" aria-label="Return time" value="12:00" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
-                                                        <a href="https://wa.me/94773132168" class="btn btn-primary rounded-pill py-2 px-4">BOOK NOW</a>
+                                                        <button type="submit" class="btn btn-primary rounded-pill py-2 px-4">Check availability</button><p class="small text-white mt-2 mb-0">Send your request on WhatsApp. We will confirm availability and your quote before booking.</p>
                                                     </div>
                                                 </div>
                                             </form>
@@ -357,6 +321,56 @@
         </div>
         <!-- About End -->
 
+        <!-- Rental guide Start -->
+        <section class="container-fluid rental-guide py-5" aria-labelledby="rental-guide-heading">
+            <div class="container">
+                <div class="text-center mx-auto pb-4" style="max-width: 800px;">
+                    <h2 id="rental-guide-heading" class="display-5 mb-3">Your rental, <span class="text-primary">made easy</span></h2>
+                    <p>Explore Tangalle with Una Bike Rental. Choose your vehicle and dates, then ask us for a rental quote.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="rental-benefit bg-light rounded p-4 h-100">
+                            <i class="fas fa-motorcycle text-primary mb-3" aria-hidden="true"></i>
+                            <h3 class="h5">Helmets included</h3>
+                            <p class="mb-0">Helmets come with your bike rental. Let us know how many riders are travelling.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="rental-benefit bg-light rounded p-4 h-100">
+                            <i class="fas fa-map-marker-alt text-primary mb-3" aria-hidden="true"></i>
+                            <h3 class="h5">Delivery available</h3>
+                            <p class="mb-0">Send your hotel or pickup location. We will confirm delivery arrangements and any charges.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="rental-benefit bg-light rounded p-4 h-100">
+                            <i class="fas fa-road text-primary mb-3" aria-hidden="true"></i>
+                            <h3 class="h5">Unlimited kilometres</h3>
+                            <p class="mb-0">Enjoy your rental without a daily kilometre limit.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="rental-benefit bg-light rounded p-4 h-100">
+                            <i class="fas fa-calendar-alt text-primary mb-3" aria-hidden="true"></i>
+                            <h3 class="h5">Long-term discounts</h3>
+                            <p class="mb-0">Staying longer? Ask for a discounted quote based on your vehicle and rental period.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4 mt-3">
+                    <div class="col-md-4"><h3 class="h5"><span class="text-primary">01.</span> Choose your ride</h3><p class="mb-0">Browse our bikes and cars, and choose the model that suits your trip.</p></div>
+                    <div class="col-md-4"><h3 class="h5"><span class="text-primary">02.</span> Request your dates</h3><p class="mb-0">Share your dates and pickup location on WhatsApp for availability and a quote.</p></div>
+                    <div class="col-md-4"><h3 class="h5"><span class="text-primary">03.</span> Confirm and collect</h3><p class="mb-0">Confirm your rental terms and documents with our team before pickup or delivery.</p></div>
+                </div>
+                <div class="d-flex flex-wrap gap-3 align-items-center mt-4">
+                    <a class="btn btn-primary rounded-pill py-2 px-4" href="https://wa.me/94773132168?text=Hi%20Una%20Bike%20Rental%2C%20please%20help%20me%20with%20a%20rental%20quote.">Ask Una for a quote</a>
+                    <a href="vehicle.html#rental-faq">Read the rental FAQs <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </section>
+        <!-- Rental guide End -->
+
         <!-- Car categories Start -->
         <div class="container-fluid categories py-5">
             <div class="container">
@@ -406,7 +420,7 @@
                                         <i class="fa fa-road text-dark"></i> <span class="text-body ms-1">27K</span>
                                     </div>
                                 </div>
-                                <a href="https://wa.me/94773132168" class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
+                                <a href="https://wa.me/94773132168?text=Hi%20Una%20Bike%20Rental%2C%20I%20would%20like%20to%20rent%20the%20Toyota%20Roomy.%20Please%20confirm%20availability%20and%20the%20rental%20rate%20for%20my%20dates." class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -450,7 +464,7 @@
                                         <i class="fa fa-road text-dark"></i> <span class="text-body ms-1">20K</span>
                                     </div>
                                 </div>
-                                <a href="https://wa.me/94773132168" class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
+                                <a href="https://wa.me/94773132168?text=Hi%20Una%20Bike%20Rental%2C%20I%20would%20like%20to%20rent%20the%20Ntorq%20Sport.%20Please%20confirm%20availability%20and%20the%20rental%20rate%20for%20my%20dates." class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -494,7 +508,7 @@
                                         <i class="fa fa-road text-dark"></i> <span class="text-body ms-1">37K</span>
                                     </div>
                                 </div>
-                                <a href="https://wa.me/94773132168" class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
+                                <a href="https://wa.me/94773132168?text=Hi%20Una%20Bike%20Rental%2C%20I%20would%20like%20to%20rent%20the%20%20Suzuki%20Every%20.%20Please%20confirm%20availability%20and%20the%20rental%20rate%20for%20my%20dates." class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -538,7 +552,7 @@
                                         <i class="fa fa-road text-dark"></i> <span class="text-body ms-1">28K</span>
                                     </div>
                                 </div>
-                                <a href="https://wa.me/94773132168" class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
+                                <a href="https://wa.me/94773132168?text=Hi%20Una%20Bike%20Rental%2C%20I%20would%20like%20to%20rent%20the%20Yamaha%20ZR.%20Please%20confirm%20availability%20and%20the%20rental%20rate%20for%20my%20dates." class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Book Now</a>
                             </div>
 
                             
@@ -902,8 +916,8 @@
                                     <div class="small"><span class="fa fa-user text-primary"></span><span class="ms-2"></span></div>
                                     <div class="small"><span class="fa fa-comment-alt text-primary"></span><span class="ms-2"></span></div>
                                 </div>
-                                <a href="#" class="h4 d-block mb-3">How do I rent a bike in Sri Lanka?</a>
-                                <p class="mb-3">Select your preferred bike, choose the rental duration, and complete your booking online or at our rental location.</p>
+                                <a href="vehicle.html#rental-faq" class="h4 d-block mb-3">How do I rent a bike in Sri Lanka?</a>
+                                <p class="mb-3">Choose your bike and dates, then send a request on WhatsApp. Our team will confirm availability and your quote.</p>
                                
                             </div>
                         </div>
@@ -919,8 +933,8 @@
                                     <div class="small"><span class="fa fa-user text-primary"></span><span class="ms-2"></span></div>
                                     <div class="small"><span class="fa fa-comment-alt text-primary"></span><span class="ms-2"></span></div>
                                 </div>
-                                <a href="#" class="h4 d-block mb-3">Do you need a license to drive in Sri Lanka?</a>
-                                <p class="mb-3">A valid motorcycle license from your home country is required to legally ride scooters in Sri Lanka.</p>
+                                <a href="vehicle.html#rental-faq" class="h4 d-block mb-3">Do you need a license to drive in Sri Lanka?</a>
+                                <p class="mb-3">You need a licence valid for your vehicle category in Sri Lanka. Check any local permit requirements before pickup.</p>
                               
                             </div>
                         </div>
@@ -936,8 +950,8 @@
                                     <div class="small"><span class="fa fa-user text-primary"></span><span class="ms-2"></span></div>
                                     <div class="small"><span class="fa fa-comment-alt text-primary"></span><span class="ms-2"></span></div>
                                 </div>
-                                <a href="#" class="h4 d-block mb-3">Who is responsible for the rented bike?</a>
-                                <p class="mb-3">Once rented, you are responsible for all accident damages, legal matters, and traffic violations during rental. </p>
+                                <a href="vehicle.html#rental-faq" class="h4 d-block mb-3">What should I confirm before pickup?</a>
+                                <p class="mb-3">Confirm insurance cover, any excess, deposit, fuel policy, and responsibility for damage with our team before you book. </p>
                                
                             </div>
                         </div>
@@ -991,7 +1005,7 @@
                     <div class="col-md-6 col-lg-6 col-xl-3">
                         <div class="footer-item d-flex flex-column">
                             <h4 class="text-white mb-4">Contact Info</h4>
-                            <a href="#"><i class="fa fa-map-marker-alt me-2"></i> 45/A Muslim Street Tangalle. </a>
+                            <a href="https://www.google.com/maps/search/?api=1&amp;query=6.021637%2C80.794721"><i class="fa fa-map-marker-alt me-2"></i> 45/A Muslim Street Tangalle. </a>
                             <a href="mailto:unabikerental@gmail.com"><i class="fas fa-envelope me-2"></i>unabikerental@gmail.com</a>
                             <a href="tel:+94 77 313 2168"><i class="fas fa-phone me-2"></i> +94 77 313 2168</a>
                             <a href="tel:+94 77 313 2168" class="mb-3"><i class="fas fa-print me-2"></i> +94 77 313 2168</a>
