@@ -71,6 +71,52 @@
     });
 
 
+    // Send the filled reservation to Una's existing WhatsApp contact.
+    document.querySelectorAll('.reservation-form').forEach(function (form) {
+        var pickupDate = form.elements.pickupDate;
+        var returnDate = form.elements.returnDate;
+        var returnTime = form.elements.returnTime;
+        var today = new Date();
+        var todayValue = today.getFullYear() + '-' +
+            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+            String(today.getDate()).padStart(2, '0');
+        pickupDate.min = todayValue;
+        returnDate.min = todayValue;
+
+        function validateDates() {
+            returnDate.min = pickupDate.value || todayValue;
+            returnDate.setCustomValidity('');
+            returnTime.setCustomValidity('');
+            if (!pickupDate.value || !returnDate.value) return;
+            if (returnDate.value < pickupDate.value) {
+                returnDate.setCustomValidity('Choose a return date on or after pickup.');
+            } else if (returnDate.value === pickupDate.value &&
+                returnTime.value <= form.elements.pickupTime.value) {
+                returnTime.setCustomValidity('Return time must be after pickup time.');
+            }
+        }
+
+        form.addEventListener('input', validateDates);
+        form.addEventListener('change', validateDates);
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            validateDates();
+            if (!form.reportValidity()) return;
+            var fields = new FormData(form);
+            var message = [
+                'Hi Una Bike Rental, I would like to request a rental.',
+                'Vehicle: ' + fields.get('vehicle'),
+                'Pickup location: ' + fields.get('pickup').trim(),
+                'Return location: ' + (fields.get('dropoff').trim() || fields.get('pickup').trim()),
+                'Pickup: ' + fields.get('pickupDate') + ' at ' + fields.get('pickupTime'),
+                'Return: ' + fields.get('returnDate') + ' at ' + fields.get('returnTime'),
+                'Please confirm availability, the total quote, and any delivery charges.'
+            ].join('\n');
+            window.location.assign('https://wa.me/94773132168?text=' + encodeURIComponent(message));
+        });
+    });
+
+
    // Back to top button
    $(window).scroll(function () {
     if ($(this).scrollTop() > 300) {
