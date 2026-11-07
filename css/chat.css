@@ -1,0 +1,37 @@
+/* A self-contained chat widget; the existing site layout stays unchanged. */
+.una-chat { --chat-surface: #1b2029; --chat-border: #343c49; --chat-text: #f3f5f8; --chat-muted: #b9c1ce; font-family: 'Lato', sans-serif; font-size: 15px; }
+.una-chat [hidden] { display: none !important; }
+.una-chat button, .una-chat input { font: inherit; }
+.una-chat button, .una-chat a { touch-action: manipulation; }
+.una-chat-launcher { position: fixed; bottom: 24px; right: 24px; width: 58px; height: 58px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #ea001e; color: white; box-shadow: 0 6px 24px #0006; z-index: 1050; }
+.una-chat-launcher:hover { background: #c8001a; }
+.una-chat-panel { position: fixed; bottom: 96px; right: 24px; width: 370px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100dvh - 120px); display: flex; flex-direction: column; overflow: hidden; background: #10141c; color: var(--chat-text); border: 1px solid var(--chat-border); border-radius: 16px; box-shadow: 0 12px 48px #0008; z-index: 1051; text-align: left; }
+.una-chat-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; background: var(--chat-surface); border-bottom: 1px solid var(--chat-border); }
+.una-chat-header h2 { margin: 0; color: var(--chat-text); font-size: 20px; font-weight: 700; }
+.una-chat-header p { margin: 3px 0 0; color: var(--chat-muted); font-size: 13px; }
+.una-chat-close { width: 44px; height: 44px; border: 0; border-radius: 8px; color: var(--chat-text); background: transparent; font-size: 28px !important; }
+.una-chat-close:hover { background: var(--chat-border); }
+.una-chat-log { flex: 1; min-height: 80px; overflow-y: auto; overscroll-behavior: contain; padding: 18px; }
+.una-chat-message { max-width: 92%; width: fit-content; margin: 0 0 12px; padding: 12px 14px; border-radius: 12px; color: var(--chat-text); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.una-chat-message-assistant { background: var(--chat-surface); border: 1px solid var(--chat-border); }
+.una-chat-message-user { margin-left: auto; background: #ad0017; }
+.una-chat-suggestions { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 18px 12px; }
+.una-chat-suggestions button { background: var(--chat-surface); color: var(--chat-text); border: 1px solid var(--chat-border); border-radius: 18px; padding: 8px 12px; font-size: 13px; min-height: 36px; text-align: left; }
+.una-chat-suggestions button:hover { border-color: #ea001e; }
+.una-chat-status { padding: 0 18px; margin: 0; color: var(--chat-muted); font-size: 13px; }
+.una-chat-status:not(:empty) { padding-bottom: 10px; }
+.una-chat-form { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--chat-border); }
+.una-chat-form input { min-width: 0; flex: 1; color: var(--chat-text); background: var(--chat-surface); border: 1px solid var(--chat-border); border-radius: 8px; padding: 10px; }
+.una-chat-form input::placeholder { color: var(--chat-muted); }
+.una-chat-form button { background: #ea001e; color: white; border: none; border-radius: 8px; padding: 10px 14px; min-height: 44px; }
+.una-chat button:disabled { opacity: .55; cursor: wait; }
+.una-chat-footer { padding: 0 14px 14px; }
+.una-chat-footer p { margin: 0 0 8px; font-size: 11px; line-height: 1.5; color: var(--chat-muted); }
+.una-chat-footer > div { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.una-chat-footer a, .una-chat-reset, .una-chat-retry { color: var(--chat-text); font-size: 12px; text-decoration: underline; background: transparent; border: none; padding: 5px 0; }
+.una-chat button:focus-visible, .una-chat a:focus-visible, .una-chat input:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+body:has(.una-chat) .back-to-top { bottom: 100px; }
+@media (max-width: 575px) {
+    .una-chat-panel { right: 16px; }
+    .una-chat-launcher { right: 20px; bottom: max(20px, env(safe-area-inset-bottom)); }
+}
