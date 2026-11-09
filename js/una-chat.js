@@ -11,7 +11,7 @@
         '<div class="una-chat-quick" aria-label="Suggested questions"><button type="button">Rent a bike</button><button type="button">Explore safaris</button><button type="button">Pickup &amp; delivery</button></div>' +
         '<p class="una-chat-status" role="status"></p>' +
         '<form class="una-chat-form"><label class="una-chat-sr" for="una-chat-input">Your message</label><textarea id="una-chat-input" rows="2" maxlength="1500" placeholder="Ask about a rental or safari…" required></textarea><button type="submit" aria-label="Send message">Send</button></form>' +
-        '<div class="una-chat-footer"><a class="una-chat-whatsapp" href="https://wa.me/94773132168" target="_blank" rel="noopener noreferrer">Continue on WhatsApp ↗</a><button type="button" class="una-chat-reset">New chat</button><p>AI can make mistakes. Our team confirms prices and bookings. Messages are sent to our AI service to answer your questions. Don’t share payment or ID details.</p></div></section>';
+        '<div class="una-chat-footer"><a class="una-chat-whatsapp" href="https://wa.me/94773132168" target="_blank" rel="noopener noreferrer">Continue on WhatsApp ↗</a><button type="button" class="una-chat-reset">New chat</button><p>AI can make mistakes. Our team confirms prices and bookings. Messages are processed by Google Gemini. Free-tier content may be used to improve Google’s products. Don’t share personal, payment or ID details.</p></div></section>';
     document.body.appendChild(root);
     var launcher = root.querySelector('.una-chat-launcher');
     var panel = root.querySelector('.una-chat-panel');
@@ -79,11 +79,15 @@
         busy(true);
         controller = new AbortController();
         var current = generation;
+        var failureText = 'I couldn’t connect right now. Please use Continue on WhatsApp below and our team will help.';
         var timeout = setTimeout(function () { controller.abort(); }, 25000);
         try {
             var response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history }), signal: controller.signal });
             var data = await response.json();
-            if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) throw new Error('Chat unavailable');
+            if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) {
+                if (response.status === 429) failureText = 'The AI assistant has reached its free usage limit. Please try again later or continue on WhatsApp.';
+                throw new Error('Chat unavailable');
+            }
             if (current !== generation) return;
             history.push({ role: 'assistant', content: data.reply.slice(0, 1800) });
             addMessage('assistant', data.reply);
@@ -91,7 +95,7 @@
             if (current !== generation) return;
             // A failure is not a model reply; remove the unmatched user turn before retrying.
             history.pop();
-            addMessage('assistant', 'I couldn’t connect right now. Please use Continue on WhatsApp below and our team will help.');
+            addMessage('assistant', failureText);
             status.textContent = 'Connection unavailable. Your enquiry is ready for WhatsApp.';
         } finally {
             clearTimeout(timeout);

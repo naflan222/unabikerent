@@ -1,4 +1,7 @@
-export const DEFAULT_MODEL = 'openai/gpt-4.1-mini';
+import { createGoogle } from '@ai-sdk/google';
+
+// Call Google's free-tier-capable model directly; never fall back to a paid gateway.
+export const DEFAULT_MODEL = 'gemini-2.5-flash-lite';
 export const UNAVAILABLE = 'The assistant is unavailable right now. Please continue on WhatsApp and our team will help with your enquiry.';
 
 export const INSTRUCTIONS = `You are Una, the friendly AI assistant for UNA BIKE RENTAL in Tangalle, Sri Lanka. Reply in English only, in plain text, without Markdown or HTML. Keep answers concise (usually under 100 words). Help only with this business, its rentals, safari experiences and related trip planning.
@@ -49,10 +52,10 @@ export async function handleChat({ method, headers, body }, generate, env = proc
   if (Number(headers['content-length'] || 0) > 24000) return reply(413, 'Your message is too long. Please shorten it.');
   const messages = validateMessages(body);
   if (!messages) return reply(400, 'Please send a shorter message or start a new chat.');
-  if (env.UNA_CHAT_ENABLED === 'false' || !(env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN)) return reply(503, UNAVAILABLE);
+  if (env.UNA_CHAT_ENABLED === 'false' || !env.GOOGLE_GENERATIVE_AI_API_KEY?.trim()) return reply(503, UNAVAILABLE);
   try {
     const result = await generate({
-      model: env.AI_GATEWAY_MODEL || DEFAULT_MODEL,
+      model: createGoogle({ apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY })(DEFAULT_MODEL),
       instructions: INSTRUCTIONS,
       messages,
       maxOutputTokens: 450,
@@ -64,7 +67,8 @@ export async function handleChat({ method, headers, body }, generate, env = proc
     return { status: 200, body: { reply: result.text.trim() } };
   } catch (error) {
     // Log no prompts, transcripts, provider payloads or credentials.
-    console.error('Una chat request failed', { type: error?.name || 'UnknownError' });
+    console.error('Una chat request failed', { type: error?.name || 'UnknownError', statusCode: error?.statusCode });
+    if (error?.statusCode === 429) return reply(429, 'The AI assistant has reached its free usage limit. Please try again later or continue on WhatsApp.');
     return reply(503, UNAVAILABLE);
   }
 }
