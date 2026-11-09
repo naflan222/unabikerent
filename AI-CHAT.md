@@ -1,29 +1,27 @@
-# Una chat assistant
+# Ask Una — website-only assistant
 
-An English-only floating assistant appears on every HTML page. It answers rental and safari questions using the business facts in `server/chat.mjs` and directs booking enquiries to the existing WhatsApp number. It cannot check live availability, quote unverified rates, take payment or confirm bookings.
+Ask Una is a free, browser-based guide with prepared English answers about Una Bike Rental. It does not use a generative AI model, API key, AI provider, server endpoint or usage credits. It answers immediately from the website's business information and redirects unrelated questions back to Una Bike Rental topics.
 
-## Run and deploy
+## Included topics
 
-- Node.js 22+; the existing Vercel project uses Node.js 24.
-- `npm ci`, then `npm test`.
-- Deploy the repository to the existing **renta222 / unabikerent** Vercel project. Static HTML remains at the root; `api/chat.mjs` runs as a Node.js Function at `/api/chat` with a 30-second maximum.
-- Deployed requests authenticate to Vercel AI Gateway using Vercel's injected `VERCEL_OIDC_TOKEN`. The team's AI Gateway must have access and available credits. No browser API key is used.
-- For local model testing, set `AI_GATEWAY_API_KEY` securely in your process environment. No local credential is needed for `npm test`.
-- `AI_GATEWAY_MODEL` optionally overrides the default `openai/gpt-4.1-mini`, verified against the live model catalog during implementation. Selected for fast, low-cost text answers. The catalog listed $0.40/million input tokens and $1.60/million output tokens; verify current pricing before launch.
-- `UNA_CHAT_ENABLED=false` disables generation while retaining the widget and WhatsApp handoff. Redeploy after changing Vercel environment variables.
+- Listed bikes and cars, rental enquiries and availability confirmation.
+- Yala, Udawalawe, Bundala and Ridiyagama safari experiences.
+- Quotes, long-term rental discounts, delivery, helmets and unlimited kilometres.
+- Licence/document guidance and terms that need staff confirmation.
+- Business address, contact details and website-listed hours.
 
-## Behaviour and privacy
+Answers are prepared in `js/una-chat.js`. Update them whenever the published website details change. The matcher selects a relevant answer; it cannot understand every phrasing. Unknown questions get a business-only fallback and a WhatsApp handoff. It cannot quote unverified prices, check live availability, guarantee animal sightings or confirm a booking.
 
-Conversation context lives in page memory, not localStorage or a database. Navigating away or starting a new chat clears it. Messages go to the AI provider through AI Gateway to generate answers. The server does not log prompts or replies; provider-side retention and platform logging follow the provider/project configuration.
+## Booking handoff and privacy
 
-Only customer-entered messages are included in the WhatsApp draft. The visitor must open WhatsApp and send the draft; nothing is automatically sent to staff. The draft remains available when AI fails. Failed requests are removed from model context so the next turn can retry normally.
+The chat keeps recent questions in page memory only. It does not call fetch, XMLHttpRequest, AI services or chat telemetry and does not store conversations in localStorage, sessionStorage or a database. New chat and page navigation clear the conversation.
 
-Update `server/chat.mjs` when vehicles, destinations, contact details or verified policies change. No page scraping or invented prices are used. Model answers are rendered as plain text, never HTML.
+Continue on WhatsApp opens a draft addressed to +94 77 313 2168 containing the visitor's recent questions. The visitor must choose to open WhatsApp and send the draft. Nothing is sent automatically, and no booking is confirmed in chat. The existing website's other external resources are unchanged.
 
-## Before public launch
+## Deployment and checks
 
-Confirm AI Gateway credits/access in Vercel and send a real test question in a preview. Model calls incur the team's AI Gateway usage charges. The included tests use mocks and spend no model credits.
+Deploy the normal static website to the existing Vercel project. No environment variables, billing setup or backend Functions are required. The previous chat API, provider runtime dependencies and Function configuration are removed. Existing Vercel hosting limits remain unchanged.
 
-Configure an appropriate Vercel Firewall rate limit for POST `/api/chat` and an AI Gateway project spend limit. Request sizes, history, output tokens and generation time are bounded in code, but these are not a distributed rate limiter. No firewall configuration or account budget is changed by this PR. Origin checks prevent accidental cross-site browser requests; they are not authentication and do not stop direct API callers.
+`npm ci` followed by `npm test` runs the DOM behaviour tests. npm and the development-only test dependencies are not needed by visitors. The tests cover business-only answers, destination distinctions, price/availability boundaries, local responses without network access, WhatsApp handoff, text escaping, reset, navigation and keyboard controls.
 
-Browser layout still needs checking on desktop and mobile. Automated tests cover server validation, actual SDK prompt forwarding with a mock model, WhatsApp handoff, safe text rendering, keyboard opening/closing, failed requests and chat reset races.
+This replaces the proposed Gateway and Gemini integrations in PRs #9 and #10; neither is needed for this version.
