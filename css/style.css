@@ -853,3 +853,10 @@ a:focus-visible, button:focus-visible {
 /*** copyright end ***/
 
 
+
+/* Keep the shared navigation comfortable with the Safari Tours link. */
+@media (min-width: 992px) and (max-width: 1399px) {
+    .navbar .navbar-brand h1 { font-size: 1.4rem; margin-bottom: 0; }
+    .navbar-light .navbar-nav .nav-link { font-size: 14px; margin-right: 14px; letter-spacing: 0; white-space: nowrap; }
+    .navbar .navbar-brand { margin-right: .75rem; }
+}
