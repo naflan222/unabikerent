@@ -36,3 +36,5 @@
     #una-chat .una-chat-panel { right: 16px; bottom: 82px; max-height: calc(100dvh - 98px); }
     #una-chat .una-chat-header { padding: 12px 16px; }
 }
+#una-chat .una-chat-footer nav { font-size: 12px; margin: 2px 0 4px; }
+#una-chat .una-chat-footer nav a { color: #e9edf3; text-decoration: underline; display: inline-block; padding: 6px 0; }
