@@ -48,8 +48,8 @@ test('allows the exact preview host and rejects unrelated preview hosts', async 
   assert.equal((await handleChat(req, ()=>assert.fail('model called'),env)).status,403);
 });
 
-test('missing credentials and disabled AI return a human handoff', async () => {
-  for (const config of [{},{...env,UNA_CHAT_ENABLED:'false'}]) {
+test('disabled AI returns a human handoff without invoking the provider', async () => {
+  for (const config of [{...env,UNA_CHAT_ENABLED:'false'}]) {
     const result=await handleChat(request(),()=>assert.fail('model called'),config);
     assert.equal(result.status,503); assert.match(result.body.error,/WhatsApp/);
   }
@@ -82,4 +82,14 @@ test('installed AI SDK passes business instructions and conversation to the prov
   const result = await handleChat(request(), options => generateText({...options,model}), env);
   assert.equal(result.status,200);
   assert.match(result.body.reply,/What date/);
+});
+
+
+test('deployed request-context authentication works without a token environment variable', async () => {
+  let called=false;
+  const req=request();
+  req.headers['x-vercel-oidc-token']='test-request-context-token';
+  const result=await handleChat(req,async()=>{called=true;return {text:'We offer Yala, Udawalawe, Bundala and Ridiyagama.'};},{VERCEL:'1'});
+  assert.equal(called,true);
+  assert.equal(result.status,200);
 });

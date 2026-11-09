@@ -7,7 +7,7 @@ An English-only floating assistant appears on every HTML page. It answers rental
 - Node.js 22+; the existing Vercel project uses Node.js 24.
 - `npm ci`, then `npm test`.
 - Deploy the repository to the existing **renta222 / unabikerent** Vercel project. Static HTML remains at the root; `api/chat.mjs` runs as a Node.js Function at `/api/chat` with a 30-second maximum.
-- Deployed requests authenticate to Vercel AI Gateway using Vercel's injected `VERCEL_OIDC_TOKEN`. The team's AI Gateway must have access and available credits. No browser API key is used.
+- Deployed requests authenticate to Vercel AI Gateway using the rotating `x-vercel-oidc-token` in the request context, resolved automatically by the AI SDK. `VERCEL_OIDC_TOKEN` is used for local development; it is not required as a deployed Function environment variable. The team's AI Gateway must have access and available credits. No browser API key is used.
 - For local model testing, set `AI_GATEWAY_API_KEY` securely in your process environment. No local credential is needed for `npm test`.
 - `AI_GATEWAY_MODEL` optionally overrides the default `openai/gpt-4.1-mini`, verified against the live model catalog during implementation. Selected for fast, low-cost text answers. The catalog listed $0.40/million input tokens and $1.60/million output tokens; verify current pricing before launch.
 - `UNA_CHAT_ENABLED=false` disables generation while retaining the widget and WhatsApp handoff. Redeploy after changing Vercel environment variables.

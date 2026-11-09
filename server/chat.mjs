@@ -49,7 +49,9 @@ export async function handleChat({ method, headers, body }, generate, env = proc
   if (Number(headers['content-length'] || 0) > 24000) return reply(413, 'Your message is too long. Please shorten it.');
   const messages = validateMessages(body);
   if (!messages) return reply(400, 'Please send a shorter message or start a new chat.');
-  if (env.UNA_CHAT_ENABLED === 'false' || !(env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN)) return reply(503, UNAVAILABLE);
+  // The AI SDK resolves the rotating OIDC token from Vercel's request context.
+  // A deployed Function need not have VERCEL_OIDC_TOKEN in process.env.
+  if (env.UNA_CHAT_ENABLED === 'false') return reply(503, UNAVAILABLE);
   try {
     const result = await generate({
       model: env.AI_GATEWAY_MODEL || DEFAULT_MODEL,
@@ -64,7 +66,12 @@ export async function handleChat({ method, headers, body }, generate, env = proc
     return { status: 200, body: { reply: result.text.trim() } };
   } catch (error) {
     // Log no prompts, transcripts, provider payloads or credentials.
-    console.error('Una chat request failed', { type: error?.name || 'UnknownError' });
+    let diagnostic = String(error?.message || 'Unknown error');
+    for (const value of [...messages.map(message => message.content), env.AI_GATEWAY_API_KEY, env.VERCEL_OIDC_TOKEN]) {
+      if (value) diagnostic = diagnostic.split(value).join('[redacted]');
+    }
+    diagnostic = diagnostic.replace(/Bearer\s+\S+|eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+|(?:sk-|vck_)[A-Za-z0-9_-]+/g, '[redacted]');
+    console.error('Una chat request failed', { type: error?.name || 'UnknownError', statusCode: error?.statusCode, causeType: error?.cause?.name, diagnostic: diagnostic.slice(0, 400) });
     return reply(503, UNAVAILABLE);
   }
 }
