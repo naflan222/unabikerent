@@ -49,7 +49,9 @@ export async function handleChat({ method, headers, body }, generate, env = proc
   if (Number(headers['content-length'] || 0) > 24000) return reply(413, 'Your message is too long. Please shorten it.');
   const messages = validateMessages(body);
   if (!messages) return reply(400, 'Please send a shorter message or start a new chat.');
-  if (env.UNA_CHAT_ENABLED === 'false' || !(env.AI_GATEWAY_API_KEY || env.VERCEL_OIDC_TOKEN)) return reply(503, UNAVAILABLE);
+  // The AI SDK resolves the rotating OIDC token from Vercel's request context.
+  // A deployed Function need not have VERCEL_OIDC_TOKEN in process.env.
+  if (env.UNA_CHAT_ENABLED === 'false') return reply(503, UNAVAILABLE);
   try {
     const result = await generate({
       model: env.AI_GATEWAY_MODEL || DEFAULT_MODEL,
