@@ -4,13 +4,14 @@ import { handleChat, validateMessages, INSTRUCTIONS, DEFAULT_MODEL } from '../se
 import handler from '../api/chat.mjs';
 
 const request = () => ({ method: 'POST', headers: { origin: 'https://www.unabikerental.com', 'content-type': 'application/json' }, body: { messages: [{ role: 'user', content: 'Can I book Yala for two people?' }] } });
-const env = { VERCEL_OIDC_TOKEN: 'test-only', VERCEL: '1' };
+const env = { GOOGLE_GENERATIVE_AI_API_KEY: 'test-only', VERCEL: '1' };
 
 test('returns a grounded answer with bounded generation settings', async () => {
   let called = false;
   const result = await handleChat(request(), async (options) => {
     called = true;
-    assert.equal(options.model, DEFAULT_MODEL);
+    assert.equal(options.model.modelId, DEFAULT_MODEL);
+    assert.equal(options.model.provider, 'google.generative-ai');
     assert.equal(options.instructions, INSTRUCTIONS);
     assert.match(options.instructions, /English only/);
     assert.match(options.instructions, /Do not invent prices/);
@@ -48,7 +49,7 @@ test('allows the exact preview host and rejects unrelated preview hosts', async 
   assert.equal((await handleChat(req, ()=>assert.fail('model called'),env)).status,403);
 });
 
-test('missing credentials and disabled AI return a human handoff', async () => {
+test('missing Google credentials and disabled AI return a human handoff', async () => {
   for (const config of [{},{...env,UNA_CHAT_ENABLED:'false'}]) {
     const result=await handleChat(request(),()=>assert.fail('model called'),config);
     assert.equal(result.status,503); assert.match(result.body.error,/WhatsApp/);
@@ -82,4 +83,37 @@ test('installed AI SDK passes business instructions and conversation to the prov
   const result = await handleChat(request(), options => generateText({...options,model}), env);
   assert.equal(result.status,200);
   assert.match(result.body.reply,/What date/);
+});
+
+
+test('legacy paid gateway credentials cannot enable generation', async () => {
+  const result=await handleChat(request(),()=>assert.fail('paid provider invoked'), {AI_GATEWAY_API_KEY:'legacy-key',VERCEL_OIDC_TOKEN:'legacy-token',AI_GATEWAY_MODEL:'openai/gpt-4.1-mini'});
+  assert.equal(result.status,503);
+});
+
+test('Google quota exhaustion returns an explicit free-limit handoff', async () => {
+  const original=console.error;console.error=()=>{};
+  try {
+    const result=await handleChat(request(),async()=>{throw Object.assign(new Error('quota'),{statusCode:429});},env);
+    assert.equal(result.status,429);assert.match(result.body.error,/free usage limit/);assert.match(result.body.error,/WhatsApp/);
+  } finally {console.error=original;}
+});
+
+test('SDK request goes directly to Google with server-side key and verified instructions', async () => {
+  const { generateText } = await import('ai');
+  const { createGoogle } = await import('@ai-sdk/google');
+  let calls=0;
+  const google=createGoogle({apiKey:'test-google-key',fetch:async(url,init)=>{
+    calls++;
+    const parsed=new URL(url);
+    assert.equal(parsed.hostname,'generativelanguage.googleapis.com');
+    assert.ok(parsed.pathname.includes(DEFAULT_MODEL));
+    assert.equal(new Headers(init.headers).get('x-goog-api-key'),'test-google-key');
+    const payload=JSON.parse(init.body);
+    assert.match(JSON.stringify(payload.systemInstruction),/Do not invent prices/);
+    assert.match(JSON.stringify(payload.contents),/Can I book Yala/);
+    return new Response(JSON.stringify({candidates:[{content:{role:'model',parts:[{text:'Which date would you like for your Yala safari?'}]},finishReason:'STOP'}],usageMetadata:{promptTokenCount:20,candidatesTokenCount:10,totalTokenCount:30}}),{status:200,headers:{'Content-Type':'application/json'}});
+  }});
+  const result=await handleChat(request(),options=>generateText({...options,model:google(DEFAULT_MODEL)}),env);
+  assert.equal(result.status,200);assert.equal(calls,1);assert.match(result.body.reply,/Yala/);
 });

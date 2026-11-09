@@ -64,3 +64,12 @@ test('new chat discards the old request response and resets the enquiry',async()
  assert.doesNotMatch(decodeURIComponent(doc.querySelector('.una-chat-whatsapp').href),/My old enquiry/);
  assert.equal(doc.querySelector('textarea').disabled,false);dom.window.close();
 });
+
+test('free quota exhaustion explains the limit and keeps the WhatsApp handoff',async()=>{
+ const dom=widget(async()=>({ok:false,status:429,json:async()=>({error:'free quota exhausted'})}));
+ submit(dom,'Safari tomorrow');await tick();
+ const doc=dom.window.document;
+ assert.match(doc.querySelector('.una-chat-messages').textContent,/free usage limit/);
+ assert.match(decodeURIComponent(doc.querySelector('.una-chat-whatsapp').href),/Safari tomorrow/);
+ assert.equal(doc.querySelector('textarea').disabled,false);dom.window.close();
+});
