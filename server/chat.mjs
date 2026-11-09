@@ -66,7 +66,12 @@ export async function handleChat({ method, headers, body }, generate, env = proc
     return { status: 200, body: { reply: result.text.trim() } };
   } catch (error) {
     // Log no prompts, transcripts, provider payloads or credentials.
-    console.error('Una chat request failed', { type: error?.name || 'UnknownError' });
+    let diagnostic = String(error?.message || 'Unknown error');
+    for (const value of [...messages.map(message => message.content), env.AI_GATEWAY_API_KEY, env.VERCEL_OIDC_TOKEN]) {
+      if (value) diagnostic = diagnostic.split(value).join('[redacted]');
+    }
+    diagnostic = diagnostic.replace(/Bearer\s+\S+|eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+|(?:sk-|vck_)[A-Za-z0-9_-]+/g, '[redacted]');
+    console.error('Una chat request failed', { type: error?.name || 'UnknownError', statusCode: error?.statusCode, causeType: error?.cause?.name, diagnostic: diagnostic.slice(0, 400) });
     return reply(503, UNAVAILABLE);
   }
 }
